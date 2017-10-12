@@ -1,4 +1,4 @@
-{% set version = '0.7' %}
+{% set version = '0.8.5' %}
 
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
@@ -12,17 +12,23 @@ source:
   url:
     - https://cran.r-project.org/src/contrib/rsconnect_{{ version }}.tar.gz
     - https://cran.r-project.org/src/contrib/Archive/rsconnect/rsconnect_{{ version }}.tar.gz
-  sha256: 162e9475339e1336d51cad3ddc226f5edf98e9b7661eed3e0c778a80f1408c80
+  sha256: b8726b2f06c711e5d253ee10ea46e84b8e9438fb7d1d6ac08bcffac099545a78
+
+
+  # patches:
+   # List any patch files here
+   # - fix.patch
 
 build:
+  # If this is a new build for the same version, increment the build number.
   number: 0
-  skip: true  # [win]
-# r-rcurl is not available under windows
 
+  # This is required to make R link correctly on Linux.
   rpaths:
     - lib/R/lib/
     - lib/
 
+# Suggests: scrypt, knitr, testthat, rmarkdown (>= 1.1), plumber (>= 0.3.2)
 requirements:
   build:
     - r-base
@@ -46,18 +52,50 @@ requirements:
 
 test:
   commands:
-    - $R -e "library('rsconnect')"  # [not win]
+    # You can put additional test commands to be run here.
+    - $R -e "library('rsconnect')"           # [not win]
     - "\"%R%\" -e \"library('rsconnect')\""  # [win]
+
+  # You can also put a file called run_test.py, run_test.sh, or run_test.bat
+  # in the recipe that will be run at test time.
+
+  # requires:
+    # Put any additional test requirements here.
 
 about:
   home: https://CRAN.R-project.org/package=rsconnect
   license: GPL-2
   summary: Programmatic deployment interface for 'RPubs', 'shinyapps.io', and 'RStudio Connect'.
-    Supported content types include R Markdown documents, Shiny applications, plots,
-    and static web content.
+    Supported content types include R Markdown documents, Shiny applications, Plumber
+    APIs, plots, and static web content.
   license_family: GPL2
 
 extra:
   recipe-maintainers:
     - johanneskoester
     - bgruening
+    - mingwandroid
+
+# The original CRAN metadata for this package was:
+
+# Package: rsconnect
+# Type: Package
+# Title: Deployment Interface for R Markdown Documents and Shiny Applications
+# Version: 0.8.5
+# Author: JJ Allaire
+# Maintainer: JJ Allaire <jj@rstudio.com>
+# Description: Programmatic deployment interface for 'RPubs', 'shinyapps.io', and 'RStudio Connect'. Supported content types include R Markdown documents, Shiny applications, Plumber APIs, plots, and static web content.
+# Depends: R (>= 3.0.0)
+# Imports: digest, PKI, RCurl, RJSONIO, packrat (>= 0.4.8-1), yaml (>= 2.1.5), rstudioapi (>= 0.5)
+# Suggests: scrypt, knitr, testthat, rmarkdown (>= 1.1), plumber (>= 0.3.2)
+# Enhances: BiocInstaller
+# License: GPL-2
+# RoxygenNote: 6.0.1
+# NeedsCompilation: no
+# Packaged: 2017-08-22 17:27:13 UTC; jmcphers
+# Repository: CRAN
+# Date/Publication: 2017-08-23 07:21:28 UTC
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
